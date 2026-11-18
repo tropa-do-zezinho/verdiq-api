@@ -13,6 +13,9 @@ spring:
     open-in-view: false
     properties:
       hibernate:
+        # Instant → TIMESTAMP simples (Oracle TIMESTAMP sem TZ). Sem isso: ORA-18716 no login
+        type:
+          preferred_instant_jdbc_type: TIMESTAMP
         jdbc:
           time_zone: America/Sao_Paulo
           fetch_size: 50
