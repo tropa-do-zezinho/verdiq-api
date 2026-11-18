@@ -28,6 +28,23 @@ Copie [`.env.example`](.env.example) e exporte (ou configure no IntelliJ → Run
 
 JDBC montado: `jdbc:oracle:thin:@HOST:PORT:SID`
 
+## Docker (deploy)
+
+```bash
+cd back
+docker build -t verdiq-api .
+docker run --rm -p 8080:8080 \
+  -e ORACLE_USERNAME=... \
+  -e ORACLE_PASSWORD=... \
+  -e ORACLE_HOSTNAME=... \
+  -e ORACLE_PORT=1521 \
+  -e ORACLE_SID=... \
+  -e PORT=8080 \
+  verdiq-api
+```
+
+No Railway: builder **Dockerfile**, root `back`, sem start command custom (usa o `ENTRYPOINT` da imagem). Variáveis `ORACLE_*` + `PORT` (Railway injeta).
+
 ## Subir local
 
 ```bash
