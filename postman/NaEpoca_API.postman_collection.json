@@ -1,0 +1,402 @@
+{
+  "info": {
+    "name": "Verdiq API",
+    "description": "Collection manual Must+Should (sem e-mail/WhatsApp). Seed: Senha@123",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "accessToken", "value": "" },
+    { "key": "refreshToken", "value": "" },
+    { "key": "adminToken", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login Marta (comerciante)",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "const j = pm.response.json();",
+                "pm.collectionVariables.set('accessToken', j.accessToken);",
+                "pm.collectionVariables.set('refreshToken', j.refreshToken);"
+              ]
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"login\": \"marta@naepoca.local\",\n  \"senha\": \"Senha@123\"\n}"
+            },
+            "url": "{{baseUrl}}/v1/auth/login"
+          }
+        },
+        {
+          "name": "Login Admin",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.collectionVariables.set('adminToken', pm.response.json().accessToken);"
+              ]
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"login\": \"admin@naepoca.local\",\n  \"senha\": \"Senha@123\"\n}"
+            },
+            "url": "{{baseUrl}}/v1/auth/login"
+          }
+        },
+        {
+          "name": "Login Ana (cliente)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"login\": \"ana@naepoca.local\",\n  \"senha\": \"Senha@123\"\n}"
+            },
+            "url": "{{baseUrl}}/v1/auth/login"
+          }
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/v1/auth/me"
+          }
+        },
+        {
+          "name": "Refresh",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": "{{baseUrl}}/v1/auth/refresh"
+          }
+        },
+        {
+          "name": "Register comerciante",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Carlos Sacolão\",\n  \"email\": \"carlos@naepoca.local\",\n  \"senha\": \"Senha@123\",\n  \"papel\": \"COMERCIANTE\",\n  \"cidade\": \"São Paulo\",\n  \"uf\": \"SP\",\n  \"consentimentoNotificacoes\": true,\n  \"consentimentoComparativos\": true,\n  \"merchant\": {\n    \"nomeFantasia\": \"Sacolão do Carlos\",\n    \"tipoNegocio\": \"SACOLAO\",\n    \"pracaId\": 1,\n    \"produtosPrincipais\": [1, 3, 4]\n  }\n}"
+            },
+            "url": "{{baseUrl}}/v1/auth/register"
+          }
+        },
+        {
+          "name": "Password reset request",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"marta@naepoca.local\"\n}"
+            },
+            "url": "{{baseUrl}}/v1/auth/password-reset/request"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Catálogo público",
+      "item": [
+        {
+          "name": "Products",
+          "request": { "method": "GET", "url": "{{baseUrl}}/v1/products?q=limao" }
+        },
+        {
+          "name": "Product detail",
+          "request": { "method": "GET", "url": "{{baseUrl}}/v1/products/1" }
+        },
+        {
+          "name": "Product prices",
+          "request": { "method": "GET", "url": "{{baseUrl}}/v1/products/1/prices" }
+        },
+        {
+          "name": "Product seasonality",
+          "request": { "method": "GET", "url": "{{baseUrl}}/v1/products/1/seasonality" }
+        },
+        {
+          "name": "Seasons now",
+          "request": { "method": "GET", "url": "{{baseUrl}}/v1/seasons/now?uf=SP" }
+        },
+        {
+          "name": "Seasonal events",
+          "request": { "method": "GET", "url": "{{baseUrl}}/v1/seasonal-events" }
+        },
+        {
+          "name": "Offers public",
+          "request": { "method": "GET", "url": "{{baseUrl}}/v1/offers" }
+        },
+        {
+          "name": "Plans",
+          "request": { "method": "GET", "url": "{{baseUrl}}/v1/plans" }
+        }
+      ]
+    },
+    {
+      "name": "Comerciante",
+      "item": [
+        {
+          "name": "Register purchase",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"produtoId\": 1,\n  \"kg\": 30,\n  \"valorTotal\": 120,\n  \"dataRef\": \"2026-11-10\",\n  \"fornecedor\": \"Ceagesp\"\n}"
+            },
+            "url": "{{baseUrl}}/v1/merchant/purchases"
+          }
+        },
+        {
+          "name": "Register sale",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"produtoId\": 1,\n  \"kg\": 20,\n  \"valorTotal\": 160,\n  \"dataRef\": \"2026-11-12\"\n}"
+            },
+            "url": "{{baseUrl}}/v1/merchant/sales"
+          }
+        },
+        {
+          "name": "Register loss",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"produtoId\": 2,\n  \"kg\": 1.5,\n  \"motivo\": \"ESTRAGOU\",\n  \"valorEstimado\": 30,\n  \"dataRef\": \"2026-11-13\"\n}"
+            },
+            "url": "{{baseUrl}}/v1/merchant/losses"
+          }
+        },
+        {
+          "name": "Records",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/v1/merchant/records?tipo=ALL"
+          }
+        },
+        {
+          "name": "Lots",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/v1/merchant/lots"
+          }
+        },
+        {
+          "name": "Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/v1/merchant/dashboard"
+          }
+        },
+        {
+          "name": "Recommendations",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/v1/merchant/recommendations"
+          }
+        },
+        {
+          "name": "Comparativo praça",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/v1/merchant/comparativo?produtoId=1"
+          }
+        },
+        {
+          "name": "Export CSV vendas",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/v1/merchant/export?tipo=VENDA"
+          }
+        },
+        {
+          "name": "Create offer",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"produtoId\": 1,\n  \"precoNormal\": 8.0,\n  \"precoPromocional\": 5.5,\n  \"quantidadeKg\": 40,\n  \"inicio\": \"2026-11-17\",\n  \"fim\": \"2026-11-25\",\n  \"ultimaChance\": false\n}"
+            },
+            "url": "{{baseUrl}}/v1/offers"
+          }
+        },
+        {
+          "name": "Interest Pro plan",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/v1/plans/PRO/interest"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notificações / favoritos",
+      "item": [
+        {
+          "name": "Get preferences",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/v1/me/notification-preferences"
+          }
+        },
+        {
+          "name": "Update preferences",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"canalInApp\": true,\n  \"canalWebPush\": false,\n  \"maxPorSemana\": 3,\n  \"tiposAlerta\": \"JANELA_COMPRA,EM_SAFRA\"\n}"
+            },
+            "url": "{{baseUrl}}/v1/me/notification-preferences"
+          }
+        },
+        {
+          "name": "Inbox",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/v1/me/notifications"
+          }
+        },
+        {
+          "name": "WebPush subscribe",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"endpoint\": \"https://example.com/push/demo\",\n  \"p256dh\": \"demo-key\",\n  \"auth\": \"demo-auth\"\n}"
+            },
+            "url": "{{baseUrl}}/v1/me/webpush/subscriptions"
+          }
+        },
+        {
+          "name": "Favorite product",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/v1/me/favorites/products/1"
+          }
+        },
+        {
+          "name": "Shopping list",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Feira da semana\",\n  \"produtos\": [1, 2, 5]\n}"
+            },
+            "url": "{{baseUrl}}/v1/me/shopping-lists"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin / ETL",
+      "item": [
+        {
+          "name": "ETL runs",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/v1/admin/etl/runs"
+          }
+        },
+        {
+          "name": "ETL run now",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/v1/admin/etl/run"
+          }
+        },
+        {
+          "name": "Create product",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Couve\",\n  \"categoria\": \"VERDURA\",\n  \"unidadeBase\": \"KG\"\n}"
+            },
+            "url": "{{baseUrl}}/v1/admin/products"
+          }
+        },
+        {
+          "name": "Audit",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/v1/admin/audit"
+          }
+        },
+        {
+          "name": "Impact panel",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/v1/admin/impact"
+          }
+        }
+      ]
+    }
+  ]
+}

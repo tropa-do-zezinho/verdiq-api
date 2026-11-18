@@ -1,0 +1,20 @@
+# Opcional: Oracle XE local para desenvolvimento.
+# Em produção use ORACLE_* no ambiente (sem Compose).
+services:
+  oracle:
+    image: gvenzl/oracle-xe:21-slim
+    environment:
+      ORACLE_PASSWORD: verdiq
+      APP_USER: verdiq
+      APP_USER_PASSWORD: verdiq
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 20s
+      timeout: 10s
+      retries: 10
+volumes:
+  oracle-data:
