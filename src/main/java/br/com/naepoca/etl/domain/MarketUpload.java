@@ -9,7 +9,8 @@ public class MarketUpload {
   @Column(name="arquivo_nome", nullable=false) private String arquivoNome;
   @Column(nullable=false) private String status = "VALIDADO";
   @Column(name="qtd_linhas", nullable=false) private Integer qtdLinhas = 0;
-  private String mensagem; @Column(name="criado_em") private Instant criadoEm = Instant.now();
+  @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.CLOB) private String mensagem;
+  @Column(name="criado_em") private Instant criadoEm = Instant.now();
   public Long getId(){return id;} public Long getUsuarioId(){return usuarioId;} public void setUsuarioId(Long v){usuarioId=v;}
   public String getTipo(){return tipo;} public void setTipo(String v){tipo=v;}
   public String getArquivoNome(){return arquivoNome;} public void setArquivoNome(String v){arquivoNome=v;}

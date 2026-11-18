@@ -19,7 +19,8 @@ USER verdiq
 
 COPY --from=build /app/app.jar /app/app.jar
 
-ENV PORT=8080
-EXPOSE 8080
+# Render injeta PORT (default 10000); bind fica em server.address=0.0.0.0
+ENV PORT=10000
+EXPOSE 10000
 
 ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=75.0", "-jar", "/app/app.jar"]

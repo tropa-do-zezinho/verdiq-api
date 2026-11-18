@@ -6,6 +6,7 @@ public class EventoSazonal {
   @Column(nullable=false) private String nome;
   @Column(name="regra_data", nullable=false) private String regraData;
   @Column(name="mes_tipico") private Integer mesTipico;
+  @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.CLOB)
   private String descricao;
   public Long getId(){return id;} public String getNome(){return nome;}
   public String getRegraData(){return regraData;} public Integer getMesTipico(){return mesTipico;}

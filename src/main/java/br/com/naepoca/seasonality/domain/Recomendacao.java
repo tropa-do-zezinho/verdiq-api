@@ -8,9 +8,9 @@ public class Recomendacao {
   @Column(name="comerciante_id") private Long comercianteId;
   @Column(name="produto_id", nullable=false) private Long produtoId;
   @Column(nullable=false) private String tipo; @Column(nullable=false) private String titulo;
-  @Column(nullable=false) private String mensagem;
+  @JdbcTypeCode(SqlTypes.CLOB) @Column(nullable=false) private String mensagem;
   @Column(nullable=false) private String confianca;
-  @JdbcTypeCode(SqlTypes.JSON) @Column(name="dados_json", nullable=false)
+  @JdbcTypeCode(SqlTypes.JSON) @Column(name="dados_json", nullable=false, columnDefinition="CLOB")
   private Map<String, Object> dadosJson;
   @Column(name="periodo_inicio") private LocalDate periodoInicio;
   @Column(name="periodo_fim") private LocalDate periodoFim;

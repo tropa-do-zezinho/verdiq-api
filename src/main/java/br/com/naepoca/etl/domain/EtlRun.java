@@ -7,7 +7,8 @@ public class EtlRun {
   @Column(nullable=false) private String fonte; @Column(nullable=false) private String status;
   @Column(name="iniciado_em") private Instant iniciadoEm = Instant.now();
   @Column(name="finalizado_em") private Instant finalizadoEm;
-  private Integer registros = 0; private String mensagem;
+  private Integer registros = 0;
+  @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.CLOB) private String mensagem;
   @Column(name="autor_usuario_id") private Long autorUsuarioId;
   public Long getId(){return id;} public String getFonte(){return fonte;} public void setFonte(String v){fonte=v;}
   public String getStatus(){return status;} public void setStatus(String v){status=v;}

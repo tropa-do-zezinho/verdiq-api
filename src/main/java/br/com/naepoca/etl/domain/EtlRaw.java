@@ -7,7 +7,7 @@ public class EtlRaw {
   @Id @GeneratedValue(strategy=GenerationType.IDENTITY) private Long id;
   @Column(name="etl_run_id", nullable=false) private Long etlRunId;
   @Column(nullable=false) private String fonte;
-  @JdbcTypeCode(SqlTypes.JSON) @Column(nullable=false) private Map<String,Object> payload;
+  @JdbcTypeCode(SqlTypes.JSON) @Column(nullable=false, columnDefinition="CLOB") private Map<String,Object> payload;
   @Column(name="coletado_em") private Instant coletadoEm = Instant.now();
   public Long getId(){return id;} public Long getEtlRunId(){return etlRunId;} public void setEtlRunId(Long v){etlRunId=v;}
   public String getFonte(){return fonte;} public void setFonte(String v){fonte=v;}
