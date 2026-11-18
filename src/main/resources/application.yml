@@ -18,6 +18,9 @@ spring:
   flyway:
     enabled: true
     validate-on-migrate: false
+    # Schema FIAP (ex.: RM564694) costuma não estar vazio e sem histórico Flyway
+    baseline-on-migrate: true
+    baseline-version: 0
     locations: classpath:db/migration
   batch:
     jdbc:

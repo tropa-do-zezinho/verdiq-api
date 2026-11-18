@@ -43,7 +43,9 @@ docker run --rm -p 8080:8080 \
   verdiq-api
 ```
 
-No Railway: builder **Dockerfile**, root `back`, sem start command custom (usa o `ENTRYPOINT` da imagem). Variáveis `ORACLE_*` + `PORT` (Railway injeta).
+No Render/Railway: builder **Dockerfile**, root `back`, sem start command custom (usa o `ENTRYPOINT` da imagem). Variáveis `ORACLE_*` + `PORT`.
+
+Flyway usa `baseline-on-migrate=true` e `baseline-version=0` para schemas FIAP já não-vazios sem tabela de histórico.
 
 ## Subir local
 
